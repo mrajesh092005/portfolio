@@ -37,7 +37,7 @@ app.post("/send-sms", async (req, res) => {
     });
     //send sms
 
-    await transporter.sendMail({
+   await transporter.sendMail({
   from: process.env.EMAIL_USER,
   to: email,
   subject: "Thank you for contacting me",
