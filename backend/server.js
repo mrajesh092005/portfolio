@@ -23,25 +23,23 @@ const client = twilio(
 );
 
 app.post("/send-sms", async (req, res) => {
+  const { name, email, message } = req.body;
+
   try {
-    const { name, email, message } = req.body;
-
-    console.log("New message:", name, email, message);
-    
-
-
     await client.messages.create({
-      body: `New Portfolio Message\nName: ${name}\nEmail: ${email}\nMessage: ${message}`,
+      body: `New Portfolio Message
+Name: ${name}
+Email: ${email}
+Message: ${message}`,
       from: process.env.TWILIO_PHONE,
       to: process.env.YOUR_PHONE
     });
-    //send sms
 
-   await transporter.sendMail({
-  from: process.env.EMAIL_USER,
-  to: email,
-  subject: "Thank you for contacting me",
-  text: `Hi ${name},
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "Thank you for contacting me",
+      text: `Hi ${name},
 
 Thank you for reaching out through my portfolio.
 
@@ -49,23 +47,21 @@ I have received your message and will get back to you shortly.
 
 Best regards,
 Rajesh`
-});
-
+    });
 
     res.json({
       success: true,
-      message: "SMS sent successfully"
+      message: "SMS and email sent successfully"
     });
-
   } catch (error) {
-    console.error(error);
+    console.error("Send error:", error);
     res.status(500).json({
       success: false,
-      message: "SMS failed"
+      message: "Server error",
+      error: error.message
     });
   }
 });
-
 
 app.get("/download-resume", (req, res) => {
   const path = require("path");
